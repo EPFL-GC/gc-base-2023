@@ -1,4 +1,4 @@
-name: Assignment 2 Autograder
+name: Autograder
 
 on: [push]
 
