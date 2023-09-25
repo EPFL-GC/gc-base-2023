@@ -4,17 +4,17 @@ channels:
 dependencies:
   - pip
   - pip:
-    - triangle
+    - libigl
     - opencv-python
+    - pyvista
   - gmsh
+  - python=3.9
   - python-gmsh
-  - igl
   - matplotlib
   - jupyterlab
   - pytest
   - pytest-html
   - pytest-timeout
-  - matplotlib
   - svgwrite
   - meshplot
-  - pyvista
+  - triangle
