@@ -1,5 +1,7 @@
 import igl
 import numpy as np
+from scipy.sparse import coo_matrix
+from scipy.sparse.csgraph import connected_components, depth_first_order
 import triangle as tr
 import warnings
 
@@ -141,18 +143,22 @@ def simplify_boundary_add_slit(scaled_V, F, lengthSlit=2.9, heightSlit=5.0, cham
     
     return newScaledV, simplifiedBoundaryFacets
 
-def edges_to_closed_path(edges):
-    path = []
-    edgesRemaining = len(edges) * [True]
-    for _ in range(len(edges)):
-        if len(path) == 0:
-            path.append(edges[0][0])
-            path.append(edges[0][1])
-            edgesRemaining[0] = False
-            continue
-        for edgeIdx, edge in enumerate(edges):
-            if edgesRemaining[edgeIdx] and path[-1] in edge:
-                path.append(edge[0] if edge[0] != path[-1] else edge[1])
-                edgesRemaining[edgeIdx] = False
-                continue
-    return path, edgesRemaining
+def edges_to_closed_path(vertices, edges):
+    # get boundary edges in the correct, "sorted" order by doing a DFS graph traversal
+    E = np.array(edges)
+    N = vertices.shape[0]
+    entries = np.ones(E.shape[0]), (E[:,0], E[:,1])
+    graph = coo_matrix(entries, shape=(N, N)).tocsr()
+    numLoops, vtxLoopLabels = connected_components(graph, directed=False, return_labels=True)
+
+    paths = []
+
+    for loopIdx in range(numLoops):
+        startVtxIdx = np.argmax(vtxLoopLabels >= loopIdx)
+        # get boundary edges in the correct, "sorted" order by doing a DFS graph traversal
+        bV = depth_first_order(graph, startVtxIdx, directed=False, return_predecessors=False)
+        if len(bV) < 2: continue
+        bV = bV.tolist() + [bV[0]]
+        paths.append(bV)
+
+    return paths
