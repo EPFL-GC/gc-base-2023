@@ -65,9 +65,10 @@ def simplify_boundary_add_slit(scaled_V, F, lengthSlit=2.9, heightSlit=5.0, cham
     
     # First find the contact lines
     contactPaths = []
+    tol = 1.0e-6
     for Es in igl.boundary_facets(F).tolist():
         
-        if scaled_V[Es[0], 1] == 0.0 and scaled_V[Es[1], 1] == 0.0:
+        if abs(scaled_V[Es[0], 1]) < tol and abs(scaled_V[Es[1], 1]) < tol:
             es0IdPath = None
             es0AtBeginning = None
             es1IdPath = None
@@ -136,7 +137,7 @@ def simplify_boundary_add_slit(scaled_V, F, lengthSlit=2.9, heightSlit=5.0, cham
     # Get the new boundary facets
     simplifiedBoundaryFacets = []
     for Es in igl.boundary_facets(F).tolist():
-        if scaled_V[Es[0], 1] != 0.0 or scaled_V[Es[1], 1] != 0.0:
+        if abs(scaled_V[Es[0], 1]) > tol or abs(scaled_V[Es[1], 1]) > tol:
             simplifiedBoundaryFacets.append(Es)
 
     simplifiedBoundaryFacets = simplifiedBoundaryFacets + [[path[i], path[i+1]] for path in simplifiedContactPaths for i in range(len(path)-1)]
