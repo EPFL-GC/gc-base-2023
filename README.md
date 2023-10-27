@@ -21,3 +21,15 @@ conda activate gc_course_env
 conda install -c conda-forge gmsh jupyterlab pytest pytest-html pytest-timeout matplotlib svgwrite meshplot triangle
 pip install pyvista libigl opencv-python
 ```
+
+For HW2 on using MacOS, please install [PyTorch](https://pytorch.org/get-started/locally/) as follow
+
+```
+conda install pytorch::pytorch=2.0 -c pytorch
+```
+
+For Linux and Windows user, please run
+
+```
+conda install pytorch=2.0 cpuonly -c pytorch
+```
