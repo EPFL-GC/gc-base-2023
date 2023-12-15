@@ -77,7 +77,7 @@ class MCF():
         self.update_system(v, f)
         average_mean_curvature_list.append(self.average_mean_curvature)
         while i < max_iter and not has_zero_area_triangle(v, f) and not self.meet_stopping_criteria(average_mean_curvature_list, epsilon1, epsilon2):
-            self.solve_laplace_equation(v, f)
+            self.solve_laplace_equation(v)
             self.update_system(v, f)
 
             if self.num_bdry_vx == 0:
